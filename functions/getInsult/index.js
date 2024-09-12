@@ -1,7 +1,5 @@
-const  { sendResponse, sendError } = require("../../responses/index");
-const {db} = require("../../services/db");
-
-
+const { sendResponse, sendError } = require('../../responses/index');
+const { db } = require('../../services/db');
 
 const insults = [
     {
@@ -14,24 +12,18 @@ const insults = [
     }
 ];
 
-
-
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
     try {
-        const { Items } = await db.scan({ 
-            TableName: "insults-db",
-        FilterExpression: "attribute_exists(#DYNOBASE_insult)",
-        ExpressionAttributeNames: { 
-            "#DYNOBASE_insult": "insult" 
-        }
-        
-        
+        const { Items } = await db.scan({
+            TableName: 'insults-db',
+            FilterExpression: "attribute_exists(#DYNOBASE_insult)",
+            ExpressionAttributeNames: {
+                "#DYNOBASE_insult": "insult"
+            }
         }).promise();
-        return sendResponse(200, {success: true, insults :Items});
+
+        return sendResponse(200, { success: true, insults: Items });
     } catch (error) {
-        return sendError(500, {
-            success: false,
-            message: 'could not get insults'
-        });
+        return sendError(500, { success: false, message: 'Could not get insults' })
     }
 };

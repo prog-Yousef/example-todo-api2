@@ -1,34 +1,59 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: yousefs
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: dynamo-exempel
-frameworkVersion: '3'
-
+service: serverless-example
 
 provider:
   name: aws
   runtime: nodejs20.x
- region: eu-north-1
+  region: eu-north-1
   iam:
-  role: arn:aws:iam::396913740002:role/lecture-role
+    role: arn:aws:iam::396913740002:role/lecture-role
+
+build:
+  esbuild:
+    minify: true
 
 
-
-
-
-
-  plugins:
-  - serverless-webpack
-
-
-  package:
+package:
   individually: true
 
-
 functions:
-  hello:
-    handler: handler.hello
+  getInsult:
+    handler: functions/getInsult/index.handler
     events:
       - httpApi:
-          path: /
-          method: get
+          path: '/api/insults'
+          method: GET
+  postInsult:
+    handler: functions/postInsult/index.handler
+    events:
+      - httpApi:
+          path: '/api/insults'
+          method: POST
+  updateInsult:
+    handler: functions/updateInsult/index.handler
+    events:
+      - httpApi:
+          path: '/api/insults/{insultId}'
+          method: POST
+  deleteInsult:
+    handler: functions/deleteInsult/index.handler
+    events:
+      - httpApi:
+          path: '/api/insults/{insultId}'
+          method: DELETE
+
+resources:
+  Resources:
+    insultsDb:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: insults-db
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
