@@ -1,7 +1,7 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: yousefs
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: serverless-example
+service: example-todo-api
 
 provider:
   name: aws
@@ -19,41 +19,35 @@ package:
   individually: true
 
 functions:
-  getInsult:
-    handler: functions/getInsult/index.handler
+  GetTodo:
+    handler: functions/GetTodo/index.handler
     events:
       - httpApi:
-          path: '/api/insults'
-          method: GET
-  postInsult:
-    handler: functions/postInsult/index.handler
+          path: /todos
+          method: get
+  PostTodo:
+    handler: functions/PostTodo/index.handler
     events:
       - httpApi:
-          path: '/api/insults'
-          method: POST
-  updateInsult:
-    handler: functions/updateInsult/index.handler
+          path: /todos
+          method: post
+  UpdateTodo:
+    handler: functions/UpdateTodo/index.handler
     events:
       - httpApi:
-          path: '/api/insults/{insultId}'
-          method: POST
-  deleteInsult:
-    handler: functions/deleteInsult/index.handler
-    events:
-      - httpApi:
-          path: '/api/insults/{insultId}'
-          method: DELETE
+          path: /todos/{id}
+          method: put
 
 resources:
   Resources:
-    insultsDb:
+    MyTodoTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: insults-db
+        TableName: example-todos3
         AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
+          - AttributeName: "todoId"
+            AttributeType: "S"
         KeySchema:
-          - AttributeName: id
-            KeyType: HASH
+          - AttributeName: "todoId"
+            KeyType: HASH # Primary key (partition key)
         BillingMode: PAY_PER_REQUEST

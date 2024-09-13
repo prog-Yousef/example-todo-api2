@@ -1,21 +1,21 @@
-function sendResponse(code, response) {
-    return {
-      statusCode: code,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(response),
-    };
-}
-
-function sendError(statusCode, message) {
+function sendResponse(data) {
   return {
-    statusCode,
+    statusCode: 200,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(message)
+    body: JSON.stringify({ data }),
   };
 }
 
-module.exports = { sendResponse, sendError }
+function sendError(statusCode, data) {
+  return {
+    statusCode: statusCode,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ data }),
+  };
+}
+
+module.exports = { sendResponse, sendError };
