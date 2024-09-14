@@ -7,11 +7,13 @@ module.exports.handler = async (event) => {
 
   try {
     await db.put({
-      TableName: "example-todos3",
+      TableName: "new-example-todos",
       Item: {
+        username: body.username,
         todoId: uuidv4(),
         todo: body.todo,
         done: false,
+        timestamp: new Date().toISOString(),
       },
     });
   } catch (error) {

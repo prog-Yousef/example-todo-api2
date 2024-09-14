@@ -7,7 +7,7 @@ module.exports.handler = async (event) => {
 
   try {
     await db.update({
-      TableName: "example-todos3",
+      TableName: " new-example-todos",
       Key: {
         todoId: id,
       },

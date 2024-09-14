@@ -14,7 +14,6 @@ build:
   esbuild:
     minify: true
 
-
 package:
   individually: true
 
@@ -23,7 +22,7 @@ functions:
     handler: functions/GetTodo/index.handler
     events:
       - httpApi:
-          path: /todos
+          path: /todos/{username}
           method: get
   PostTodo:
     handler: functions/PostTodo/index.handler
@@ -38,16 +37,43 @@ functions:
           path: /todos/{id}
           method: put
 
+
+  GetRecent:
+    handler: functions/GetRecent/index.handler
+    events:
+      - httpApi:
+          path: /todos/recent
+          method: post
+
 resources:
   Resources:
     MyTodoTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: example-todos3
+        TableName: new-example-todos
         AttributeDefinitions:
+          - AttributeName: "username"
+            AttributeType: "S"
           - AttributeName: "todoId"
             AttributeType: "S"
+          - AttributeName: "timestamp"
+            AttributeType: "S"
         KeySchema:
+          - AttributeName: "username"
+            KeyType: HASH # Partition key
           - AttributeName: "todoId"
-            KeyType: HASH # Primary key (partition key)
+            KeyType: RANGE # Sort key
         BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: timestampIndex
+            KeySchema:
+              - AttributeName: "timestamp"
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: usernameIndex
+            KeySchema:
+              - AttributeName: "username"
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
