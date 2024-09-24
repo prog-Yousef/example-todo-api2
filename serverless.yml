@@ -45,6 +45,14 @@ functions:
           path: /todos/recent
           method: post
 
+  GetKey:
+    handler: function/GetKey/index.handler
+    events:
+      - httpApi:
+          path: /todos/Key
+          method: get
+
+
 resources:
   Resources:
     MyTodoTable:

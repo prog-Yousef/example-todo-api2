@@ -1,7 +1,12 @@
 const { sendResponse } = require("../../responses/index");
 const { db } = require("../../services/db");
+const middy = require('@middy/core');
 
-module.exports.handler = async (event) => {
+function handler () {
+
+
+
+async (event) => {
 
   const {username} = event.pathParameters;
   console.log(username);
@@ -24,3 +29,6 @@ module.exports.handler = async (event) => {
     return sendResponse(Items);
   } catch (error) {}
 };
+}
+
+module.exports = 
